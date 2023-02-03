@@ -1,0 +1,10 @@
+{
+  "name": "nbcu",
+  "version": "1.0.0",
+  "description": "Integration to move products from Bonsai to NCBU",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.1309.0"
+  }
+}
