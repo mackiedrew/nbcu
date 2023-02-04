@@ -4,7 +4,19 @@
   "description": "Integration to move products from Bonsai to NCBU",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "start": "ts-node main.ts"
+  },
   "dependencies": {
-    "aws-sdk": "^2.1309.0"
+    "@types/unzip-stream": "^0.3.1",
+    "aws-sdk": "^2.1309.0",
+    "node-gzip": "^1.1.2",
+    "unzip-stream": "^0.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "@types/node-gzip": "^1.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
   }
 }
