@@ -1,7 +1,6 @@
 import path from "path";
 import AWS from "aws-sdk";
-import fs from "fs";
-import unzip from "unzip-stream";
+import fs, { read } from "fs";
 import zlib from "zlib";
 
 // Get credentials from a JSON file with keys matching those below
@@ -15,7 +14,7 @@ AWS.config.update({
 // Create new S3 object
 const s3 = new AWS.S3();
 
-const downloadAwsFile = (fileName: string) => {
+const downloadAwsFile = async (fileName: string) => {
   // All files exist in this one bucket in a flat level
   const bucket ='prod-feed-exports';
   const params = {
@@ -26,8 +25,14 @@ const downloadAwsFile = (fileName: string) => {
   const readStream = s3.getObject(params).createReadStream().pipe(zlib.createGunzip());
   const writeStream = fs.createWriteStream(path.join(__dirname, fileName));
   readStream.pipe(writeStream);
-  console.log(`✍️  Finished downloading and ungzipping the file: ${fileName}`)
-  return fileName;
+
+  return await new Promise<string>((resolve,reject) => {
+      readStream.on('finish', () => resolve(fileName));
+      writeStream.on('error', reject);
+      console.log(`✍️  Finished downloading and ungzipping the file: ${fileName}`)
+  });
 }
 
-export const downloadAwsFiles = (fileNames: string[]) => fileNames.map(downloadAwsFile)
+export const downloadAwsFiles = async (fileNames: string[]) => Promise.all(fileNames.map(async (fileName) => {
+  return await downloadAwsFile(fileName)
+}))
