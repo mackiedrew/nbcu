@@ -10,7 +10,7 @@ import { stripHtml } from "string-strip-html";
  * We need to split the Description field so that the Sentences get mapped to Product Description, and that we add a new optional attribute for every category in our marketplace called Product Details, which is the mapped recipient of all the remaining data. (Note: Delete SKU info).
  */
 
-const transformCsvToNCBU = async (fileName: string) => {
+const transformCsvToNCBU = async (fileName) => {
   const originalCsv = await fs.readFile(path.resolve(__dirname, fileName), "utf-8");
 
   // Read file into papa
@@ -31,7 +31,7 @@ const transformCsvToNCBU = async (fileName: string) => {
     .map(splitImages)
     .map(splitDescription);
     
-  console.log(transformedData.map((e: any) => [e.product_description, e.product_details]))
+  console.log(transformedData.map((e) => [e.product_description, e.product_details]))
 
   const csv = papa.unparse({...transformedData, data: transformedData});
 
@@ -40,15 +40,15 @@ const transformCsvToNCBU = async (fileName: string) => {
   await fs.writeFile(path.resolve(__dirname, `nbcu-${fileName}`), csv);
 };
 
-const removeRatings = ({ total_ratings, star_rating, ...rest }: any) => {
+const removeRatings = ({ total_ratings, star_rating, ...rest }) => {
     return rest;
 }
 
-const addRefundableColumn = (row: any) => ({ ...row, refundable: true }) 
+const addRefundableColumn = (row) => ({ ...row, refundable: true }) 
 
-const removeHTMLFromDescription = (row: any) => ({ ...row, description: stripHtml(row.description || "").result });
+const removeHTMLFromDescription = (row) => ({ ...row, description: stripHtml(row.description || "").result });
 
-const splitImages = ({image_link, additional_image_link, ...rest}: any) => {
+const splitImages = ({image_link, additional_image_link, ...rest}) => {
     const [image_2 = '', image_3 = '', image_4 = '', image_5 = '', image_6 = ''] = (additional_image_link || "").split(",");
     return {
         ...rest,
@@ -61,14 +61,14 @@ const splitImages = ({image_link, additional_image_link, ...rest}: any) => {
     }
 };
 
-const truncate = (string: string, limit: number) => {
+const truncate = (string, limit) => {
   if (string.length <= limit) {
     return string;
   }
   return string.slice(0, limit - 1);
 };
 
-const splitDescription = ({description, ...rest}: any) => {
+const splitDescription = ({description, ...rest}) => {
   const [product_description, ...product_details] = description.split('\n');
   return {
     product_description: truncate(product_description, 5000),
@@ -77,5 +77,5 @@ const splitDescription = ({description, ...rest}: any) => {
   }
 }
 
-export const transformCsvsToNCBU = (fileNames: string[]) =>
+export const transformCsvsToNCBU = (fileNames) =>
   Promise.all(fileNames.map(transformCsvToNCBU));

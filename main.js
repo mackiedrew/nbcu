@@ -1,11 +1,11 @@
 import { downloadAwsFiles } from "./aws";
 import { transformCsvsToNCBU } from "./transform";
 
-const merchants: string[] = [
+const merchants = [
     "schutz",
 ].map(merchant => `${merchant}.csv`)
 
-const main = async (merchants: string[]) => {
+const main = async (merchants) => {
     console.log("🚀 Started transforming CSVs");
 
     // Download list of TSVs from AWS bucket

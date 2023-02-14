@@ -14,7 +14,7 @@ AWS.config.update({
 // Create new S3 object
 const s3 = new AWS.S3();
 
-const downloadAwsFile = async (fileName: string) => {
+const downloadAwsFile = async (fileName) => {
   // All files exist in this one bucket in a flat level
   const bucket ='prod-feed-exports';
   const params = {
@@ -33,6 +33,6 @@ const downloadAwsFile = async (fileName: string) => {
   });
 }
 
-export const downloadAwsFiles = async (fileNames: string[]) => Promise.all(fileNames.map(async (fileName) => {
+export const downloadAwsFiles = async (fileNames) => Promise.all(fileNames.map(async (fileName) => {
   return await downloadAwsFile(fileName)
 }))
