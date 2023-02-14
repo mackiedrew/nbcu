@@ -1,7 +1,7 @@
-import path from "path";
-import AWS from "aws-sdk";
-import fs, { read } from "fs";
-import zlib from "zlib";
+const path = require("path");
+const AWS = require("aws-sdk");
+const fs = require("fs");
+const zlib = require("zlib");
 
 // Get credentials from a JSON file with keys matching those below
 AWS.config.loadFromPath(path.resolve(__dirname, 'awsConfig.json'));
@@ -26,13 +26,15 @@ const downloadAwsFile = async (fileName) => {
   const writeStream = fs.createWriteStream(path.join(__dirname, fileName));
   readStream.pipe(writeStream);
 
-  return await new Promise<string>((resolve,reject) => {
+  return await new Promise((resolve,reject) => {
       readStream.on('finish', () => resolve(fileName));
       writeStream.on('error', reject);
       console.log(`✍️  Finished downloading and ungzipping the file: ${fileName}`)
   });
 }
 
-export const downloadAwsFiles = async (fileNames) => Promise.all(fileNames.map(async (fileName) => {
+const downloadAwsFiles = async (fileNames) => Promise.all(fileNames.map(async (fileName) => {
   return await downloadAwsFile(fileName)
 }))
+
+module.exports = { downloadAwsFiles }

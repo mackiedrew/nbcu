@@ -1,5 +1,6 @@
-import { downloadAwsFiles } from "./aws";
-import { transformCsvsToNCBU } from "./transform";
+const { downloadAwsFiles } = require("./aws.js");
+const { transformCsvsToNCBU } = require("./transform.js");
+const functions = require('@google-cloud/functions-framework');
 
 const merchants = [
     "schutz",
@@ -21,3 +22,9 @@ const main = async (merchants) => {
 }
 
 main(merchants);
+
+functions.http('generate', (req, res) => {
+
+  main(merchants);
+  res.send('OK');
+});

@@ -1,7 +1,7 @@
-import papa from "papaparse";
-import { promises as fs } from "fs";
-import path from "path";
-import { stripHtml } from "string-strip-html";
+const papa = require("papaparse");
+const { promises: fs } = require("fs");
+const path = require("path");
+const { stripHtml } = require("string-strip-html");
 
 /**
  * ✅ We need to split additional image into 6 rows instead of one separated by commas
@@ -15,7 +15,7 @@ const transformCsvToNCBU = async (fileName) => {
 
   // Read file into papa
   console.log("👁️  Reading CSV", fileName);
-  const parsedCsv = await new Promise<any>((resolve) =>
+  const parsedCsv = await new Promise((resolve) =>
     papa.parse(originalCsv, {
       header: true,
       complete: resolve,
@@ -30,14 +30,12 @@ const transformCsvToNCBU = async (fileName) => {
     .map(removeHTMLFromDescription)
     .map(splitImages)
     .map(splitDescription);
-    
-  console.log(transformedData.map((e) => [e.product_description, e.product_details]))
 
   const csv = papa.unparse({...transformedData, data: transformedData});
 
   // Write new file
-  console.log("🖊️  Writing transformed CSV", `nbcu-${fileName}`);
-  await fs.writeFile(path.resolve(__dirname, `nbcu-${fileName}`), csv);
+  console.log("🖊️  Writing transformed CSV", `nbcu-csv`);
+  await fs.writeFile(path.resolve(__dirname, `nbcu.csv`), csv);
 };
 
 const removeRatings = ({ total_ratings, star_rating, ...rest }) => {
@@ -77,5 +75,7 @@ const splitDescription = ({description, ...rest}) => {
   }
 }
 
-export const transformCsvsToNCBU = (fileNames) =>
+const transformCsvsToNCBU = (fileNames) =>
   Promise.all(fileNames.map(transformCsvToNCBU));
+
+module.exports = { transformCsvsToNCBU }
