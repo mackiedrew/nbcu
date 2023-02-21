@@ -2,10 +2,11 @@
   "name": "nbcu",
   "version": "1.0.0",
   "description": "Integration to move products from Bonsai to NCBU",
-  "main": "index.js",
+  "main": "functions.js",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "deploy:feed": "gcloud functions deploy nbcu-mirakl-feed --gen2 --region=us-east1 --runtime=nodejs18 --source=./ --entry-point=feed --trigger-http --allow-unauthenticated"
   },
   "dependencies": {
     "@google-cloud/functions-framework": "3.1.3",

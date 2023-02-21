@@ -42,7 +42,7 @@ const removeRatings = ({ total_ratings, star_rating, ...rest }) => {
     return rest;
 }
 
-const addRefundableColumn = (row) => ({ ...row, refundable: true }) 
+const addRefundableColumn = (row) => ({ ...row, refundable: "Yes" }) 
 
 const removeHTMLFromDescription = (row) => ({ ...row, description: stripHtml(row.description || "").result });
 
