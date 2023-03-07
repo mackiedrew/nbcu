@@ -29,7 +29,8 @@ const transformCsvToNCBU = async (fileName) => {
     .map(addRefundableColumn)
     .map(removeHTMLFromDescription)
     .map(splitImages)
-    .map(splitDescription);
+    .map(splitDescription)
+    .map(addVariantGroupCode);
 
   const csv = papa.unparse({...transformedData, data: transformedData});
 
@@ -42,7 +43,9 @@ const removeRatings = ({ total_ratings, star_rating, ...rest }) => {
     return rest;
 }
 
-const addRefundableColumn = (row) => ({ ...row, refundable: "Yes" }) 
+const addRefundableColumn = (row) => ({ ...row, is_final_sale: "No" });
+
+const addVariantGroupCode = (row) => ({ ...row, "product-id": row.item_group_id, "product-id-type": row.item_group_id });
 
 const removeHTMLFromDescription = (row) => ({ ...row, description: stripHtml(row.description || "").result });
 

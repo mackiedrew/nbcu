@@ -14,11 +14,11 @@ functions.http("generate", (req, res) => {
 functions.http("feed", async (req, res) => {
   const now = luxon.DateTime.now();
   console.log("now", now)
-  const lastHour = luxon.DateTime.fromObject({
+  const lastDay = luxon.DateTime.fromObject({
     year: now.year,
     month: now.month,
     day: now.day,
-    hour: now.hour,
+    // hour: now.hour,
   });
   // Download CSV from Google Bucket
   const csv = await readCsv("./nbcu.csv");
